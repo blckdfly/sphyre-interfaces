@@ -15,7 +15,19 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
     title: "Sphyre App",
     description: "Decentralized Identity for Official Documents",
-    manifest: "/manifest.json", // ✨ Tambahkan ini juga ke metadata
+    manifest: "/manifest.json",
+    icons: {
+        icon: [
+            { url: '/assets/sphyre-logo.svg', sizes: 'any' },
+            { url: '/icons/icons192', sizes: '16x16', type: 'image/png' },
+            { url: '/icons/icons512', sizes: '32x32', type: 'image/png' },
+        ],
+        apple: {
+            url: '/assets/sphyre-logo.svg',
+            sizes: '180x180',
+            type: 'image/svg',
+        },
+    },
 };
 
 export default function RootLayout({
@@ -25,10 +37,6 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
-        <head>
-            <link rel="manifest" href="/manifest.json" />
-            <meta name="theme-color" content="#000000" />
-        </head>
         <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         {children}
         </body>
