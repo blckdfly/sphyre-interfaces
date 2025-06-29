@@ -28,12 +28,13 @@ export default function RootLayout({
     children: React.ReactNode
 }) {
     return (
-        <html lang="en">
+    <html lang="en">
         <body className={inter.className}>
-        <main className="max-w-md mx-auto h-screen overflow-hidden">
+        <main className="relative max-w-md mx-auto h-screen">
             {children}
         </main>
+        <div id="portal-root" />
         </body>
-        </html>
-    )
+    </html>
+    );
 }

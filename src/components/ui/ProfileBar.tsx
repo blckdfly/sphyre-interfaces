@@ -1,5 +1,8 @@
+'use client';
+
 import React from 'react';
 import Image from 'next/image';
+import { Bell } from 'lucide-react';
 
 interface ProfileBarProps {
     username: string;
@@ -7,17 +10,22 @@ interface ProfileBarProps {
 
 const ProfileBar: React.FC<ProfileBarProps> = ({ username }) => {
     return (
-        <div className="flex items-center">
-            <div className="relative w-10 h-10 rounded-full overflow-hidden bg-gray-300 mr-3">
-                <Image
-                    src="/api/placeholder/40/40"
-                    alt="Profile"
-                    width={40}
-                    height={40}
-                    className="object-cover"
-                />
+        <div className="bg-black px-4 pt-6 pb-4 flex items-center justify-between">
+            <div className="flex items-center">
+                <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-300 mr-3">
+                    <Image
+                        src="/assets/profile.JPG"
+                        alt="Profile"
+                        width={40}
+                        height={40}
+                        className="object-cover"
+                    />
+                </div>
+                <span className="text-white font-medium">@{username}</span>
             </div>
-            <span className="font-medium">@{username}</span>
+            <button className="text-white">
+                <Bell size={24} />
+            </button>
         </div>
     );
 };
