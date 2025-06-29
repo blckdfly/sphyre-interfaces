@@ -29,12 +29,14 @@ export default function RootLayout({
 }) {
     return (
     <html lang="en">
-        <body className={inter.className}>
-        <main className="relative max-w-md mx-auto h-screen">
-            {children}
+    <body className={inter.className}>
+        <main className="relative max-w-md mx-auto h-screen overflow-hidden">
+        {children}
         </main>
-        <div id="portal-root" />
-        </body>
+
+        {/* Portal div untuk scan popup */}
+        <div id="portal-root" className="fixed inset-0 z-[9999] pointer-events-none" />
+    </body>
     </html>
     );
 }

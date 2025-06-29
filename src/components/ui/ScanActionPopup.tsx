@@ -19,7 +19,7 @@ const ScanActionPopup: React.FC<ScanActionPopupProps> = ({
 
   const popup = (
     <div className="fixed inset-0 z-[9999] bg-black/50 flex items-end justify-center">
-      <div className="bg-white w-full max-w-md rounded-t-3xl p-6 pt-4 relative shadow-lg">
+      <div className="bg-white w-full max-w-md rounded-t-3xl px-6 py-4 shadow-xl">
         <button
           onClick={onClose}
           className="absolute top-4 right-4 text-gray-500 hover:text-black"

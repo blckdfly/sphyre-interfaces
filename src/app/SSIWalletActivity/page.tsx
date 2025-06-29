@@ -77,10 +77,10 @@ export default function SSIWalletActivity() {
       {/* ScanActionPopup di luar DOM utama via Portal */}
       <ScanActionPortal>
         <ScanActionPopup
-          visible={showScanPopup}
-          onClose={() => setShowScanPopup(false)}
-          onRequestCollect={handleRequestCollect}
-          onShareInPerson={handleShareInPerson}
+            visible={showScanPopup}
+            onClose={() => setShowScanPopup(false)}
+            onRequestCollect={handleRequestCollect}
+            onShareInPerson={handleShareInPerson}
         />
       </ScanActionPortal>
     </>

@@ -126,10 +126,10 @@ export default function SSIWalletIdentity() {
       {/* Always on top via Portal */}
       <ScanActionPortal>
         <ScanActionPopup
-          visible={showScanPopup}
-          onClose={() => setShowScanPopup(false)}
-          onRequestCollect={handleRequestCollect}
-          onShareInPerson={handleShareInPerson}
+            visible={showScanPopup}
+            onClose={() => setShowScanPopup(false)}
+            onRequestCollect={handleRequestCollect}
+            onShareInPerson={handleShareInPerson}
         />
       </ScanActionPortal>
     </>
