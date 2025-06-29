@@ -4,49 +4,22 @@
 @tailwind components;
 @tailwind utilities;
 
-body, html {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  overflow: hidden;
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  background-color: #0033ff;
-  color: white;
-  text-align: center;
+
+:root {
+  --foreground-rgb: 255, 255, 255;
+  --background-rgb: 255, 255, 255;
 }
 
-/* Untuk animasi spin logo */
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+body {
+  color: rgb(var(--foreground-rgb));
+  background: rgb(var(--background-rgb));
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior: none;
+}
+
+@media (display-mode: standalone) {
+  body {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
   }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.animate-spin-slow {
-  animation: App-logo-spin infinite 20s linear;
-}
-
-.text-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 20px;
-}
-
-.tagline {
-  font-size: 14px;
-  margin-top: -2px;
-  opacity: 1;
-}
-
-.copyright {
-  position: absolute;
-  bottom: 20px;
-  left: 0;
-  right: 0;
-  font-size: 12px;
-  opacity: 0.7;
 }
