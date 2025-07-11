@@ -18,35 +18,40 @@ const ScanActionPopup: React.FC<ScanActionPopupProps> = ({
   if (!visible) return null;
 
   const popup = (
-    <div className="fixed inset-0 z-[9999] bg-black/50 flex items-end justify-center">
-      <div className="bg-white w-full max-w-md rounded-t-3xl px-6 py-4 shadow-xl">
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 text-gray-500 hover:text-black"
-        >
-          <X size={24} />
-        </button>
-        <h3 className="text-center text-lg font-semibold text-gray-800 mb-6">
-          Select Action
-        </h3>
-        <div className="flex justify-around">
+    <div className="fixed inset-0 z-[9999] bg-black/50 flex items-end justify-center pb-20"
+    onClick={onClose}
+    >
+      {/* Popup positioned above navbar */}
+      <div className="bg-blue-600 w-full max-w-md rounded-3xl px-6 py-4 shadow-xl mx-4"
+      onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex justify-around items-center">
           <div
-            className="flex flex-col items-center cursor-pointer"
+            className="flex flex-col items-center cursor-pointer text-white"
             onClick={onRequestCollect}
           >
-            <div className="bg-blue-100 p-3 rounded-full mb-2">
-              <QrCode size={28} className="text-blue-600" />
+            <div className="mb-4">
+              <QrCode size={32} className="text-white" />
             </div>
-            <span className="text-sm text-gray-800 text-center">Respond or Collect</span>
+            <div className="text-center">
+              <div className="text-base font-medium">Respond</div>
+              <div className="text-base font-medium">or Collect</div>
+            </div>
           </div>
+          
+          <div className="w-px h-20 bg-white/30 mx-4"></div>
+          
           <div
-            className="flex flex-col items-center cursor-pointer"
+            className="flex flex-col items-center cursor-pointer text-white"
             onClick={onShareInPerson}
           >
-            <div className="bg-blue-100 p-3 rounded-full mb-2">
-              <Zap size={28} className="text-blue-600" />
+            <div className="mb-4">
+              <Zap size={32} className="text-white" />
             </div>
-            <span className="text-sm text-gray-800 text-center">Share In-Person</span>
+            <div className="text-center">
+              <div className="text-base font-medium">Share</div>
+              <div className="text-base font-medium">In-Person</div>
+            </div>
           </div>
         </div>
       </div>
