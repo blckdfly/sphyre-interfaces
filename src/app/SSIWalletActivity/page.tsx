@@ -36,7 +36,7 @@ export default function SSIWalletActivity() {
 
   const handleShareInPerson = () => {
     setShowScanPopup(false);
-    console.log('Share In-Person clicked');
+    router.push('/ShareCredentials');
   };
 
   if (!mounted) {
