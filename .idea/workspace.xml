@@ -6,9 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="56b7fe50-cd3f-44e9-b810-918c158abf31" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/sw.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/sw.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/SSIWalletActivity/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/SSIWalletActivity/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/SSIWalletIdentity/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/SSIWalletIdentity/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/ui/ProfileBar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/ui/ProfileBar.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -98,7 +96,7 @@
       <workItem from="1752233959969" duration="393000" />
       <workItem from="1752234411864" duration="7680000" />
       <workItem from="1752285371131" duration="11948000" />
-      <workItem from="1752328637638" duration="3318000" />
+      <workItem from="1752328637638" duration="4851000" />
     </task>
     <servers />
   </component>
