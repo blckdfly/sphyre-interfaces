@@ -13,38 +13,34 @@ export default function UserProfile() {
         setMounted(true);
     }, []);
 
-    const handleBack = () => {
-        router.back();
-    };
-
     const handleNotifications = () => {
         console.log('Notifications clicked');
-        // Navigate to notifications page
+        router.push('/Notifications');
     };
 
     const handleReviewOnboarding = () => {
         console.log('Review onboarding clicked');
-        // Navigate to onboarding review
+        router.push('/ReviewOnboarding');
     };
 
     const handlePrivacyPolicy = () => {
         console.log('Privacy Policy clicked');
-        // Navigate to privacy policy
+        router.push('/PrivacyPolicy');
     };
 
     const handleTermsOfUse = () => {
         console.log('Terms of Use clicked');
-        // Navigate to terms of use
+        router.push('/TermsOfUse');
     };
 
     const handleCachedContexts = () => {
         console.log('Cached Contexts clicked');
-        // Navigate to cached contexts
+        router.push('/CachedContexts');
     };
 
     const handlePublicDID = () => {
         console.log('Public DID clicked');
-        // Navigate to public DID management
+        router.push('/PublicDID');
     };
 
     const handleLogOut = () => {

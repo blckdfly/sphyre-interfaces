@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { QrCode, Zap } from 'lucide-react';
 import ScanActionPortal from './ScanActionPortal';
-import QRScanner from './QRScanner';
+import { useRouter } from 'next/navigation';
 
 interface ScanActionPopupProps {
   visible: boolean;
@@ -13,31 +13,11 @@ interface ScanActionPopupProps {
 const ScanActionPopup: React.FC<ScanActionPopupProps> = ({
   visible,
   onClose,
-  onRequestCollect,
   onShareInPerson,
 }) => {
-  const [showScanner, setShowScanner] = useState(false);
+  const router = useRouter();
 
   if (!visible) return null;
-
-  // Show QR scanner if requested
-  if (showScanner) {
-    return (
-      <ScanActionPortal>
-        <QRScanner 
-          onClose={() => {
-            setShowScanner(false);
-            onClose();
-          }}
-          onScan={(data) => {
-            console.log('QR Code scanned:', data);
-            setShowScanner(false);
-            onRequestCollect();
-          }}
-        />
-      </ScanActionPortal>
-    );
-  }
 
   const popup = (
     <div className="fixed inset-0 z-[9999] bg-black/50 flex items-end justify-center pb-20 pointer-events-auto"
@@ -50,7 +30,10 @@ const ScanActionPopup: React.FC<ScanActionPopupProps> = ({
         <div className="flex justify-around items-center">
           <div
             className="flex flex-col items-center cursor-pointer text-white"
-            onClick={() => setShowScanner(true)}
+            onClick={() => {
+              onClose(); // Close the popup
+              router.push('/QRScanner'); // Navigate to QRScanner page
+            }}
           >
             <div className="mb-4">
               <QrCode size={32} className="text-white" />

@@ -3,14 +3,13 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Plus } from 'lucide-react';
-import Image from 'next/image';
 import dynamic from 'next/dynamic';
 
 // Import component
 import ProfileBar from '@/components/ui/ProfileBar';
-import IdentityCard from '@/components/ui/IdentityCard';
 import ScanActionPopup from '@/components/ui/ScanActionPopup';
 import ScanActionPortal from '@/components/ui/ScanActionPortal';
+import IdentityCard from '@/components/ui/IdentityCard';
 
 const BottomNav = dynamic(() => import('@/components/ui/BottomNav'), {
     ssr: false,
@@ -20,6 +19,28 @@ export default function SSIWalletIdentity() {
     const router = useRouter();
     const [mounted, setMounted] = useState(false);
     const [showScanPopup, setShowScanPopup] = useState(false);
+
+    // Sample identity cards data
+    const identityCards = [
+        {
+            title: "Lumera Employee Badge",
+            issuer: "Lumera Labs",
+            bgColor: "#0D2B6B",
+            onClick: () => console.log("Card 1 clicked")
+        },
+        {
+            title: "National ID Card",
+            issuer: "Government of Indonesia",
+            bgColor: "#1A5276",
+            onClick: () => console.log("Card 2 clicked")
+        },
+        {
+            title: "University Student ID",
+            issuer: "Jakarta University",
+            bgColor: "#154360",
+            onClick: () => console.log("Card 3 clicked")
+        }
+    ];
 
     useEffect(() => {
         setMounted(true);
@@ -57,66 +78,36 @@ export default function SSIWalletIdentity() {
 
     return (
         <>
-            <div className="flex flex-col h-screen bg-white">
-                {/* Header */}
-                <ProfileBar username="blackdoffly" />
+            <div className="flex flex-col h-screen bg-black">
+                {/* Header with Profile */}
+                <div className="bg-black px-4 py-6">
+                    <ProfileBar username="blackdoffly" />
+                </div>
 
-                {/* Main content */}
-                <div className="flex-grow px-4 pt-6 pb-24 bg-[#f5f8ff]">
-                    <div className="mb-6">
-                        <div className="relative w-full h-44 rounded-2xl bg-[#0D2B6B] text-white shadow-lg overflow-hidden p-4">
-                            <div className="absolute inset-0 opacity-10">
-                                <Image
-                                    src="/assets/lumera-badge.png"
-                                    alt="Background Texture"
-                                    fill
-                                    style={{ objectFit: 'cover' }}
-                                    className="rounded-2xl"
-                                />
-                            </div>
-                            <div className="relative z-10">
-                                <p className="text-sm font-semibold">Lumera Employee Badge</p>
-                                <p className="text-xs mb-4">Lumera Labs</p>
-                            </div>
-                            <div className="absolute bottom-3 right-4 z-10 flex items-center gap-2">
-                                <Image
-                                    src="/sphyre-logo.svg"
-                                    alt="Sphyre"
-                                    width={20}
-                                    height={20}
-                                />
-                                <div className="w-3 h-3 rounded-full bg-green-500" />
-                            </div>
-                        </div>
-                    </div>
+                <div className="flex-grow bg-white rounded-t-3xl px-4 pt-8 pb-24 overflow-y-auto">
+                    {/* Identity Cards in stacked format */}
+                    <IdentityCard cards={identityCards} />
 
-                    {/* Add New Data */}
+                    {/* Add New Data Button */}
                     <div
-                        className="w-full bg-white border border-gray-300 rounded-xl p-4 mb-6 flex items-center justify-between cursor-pointer hover:bg-gray-50 transition-colors"
+                        className="w-full bg-white border border-gray-200 rounded-xl p-4 mb-6 flex items-center justify-between cursor-pointer hover:bg-gray-50 transition-colors shadow-sm"
                         onClick={handleAddNewData}
                     >
-                        <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
-                                <Plus size={20} />
+                        <div className="flex items-center space-x-3">
+                            <div className="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center">
+                                <Plus size={20} className="text-gray-600" />
                             </div>
-                            <div className="flex flex-col">
-                                <p className="text-sm font-medium">Add new data</p>
-                                <p className="text-xs text-gray-500">
+                            <div>
+                                <p className="font-medium text-gray-900">Add new data</p>
+                                <p className="text-sm text-gray-500">
                                     Select which type of data you&apos;d like to add
                                 </p>
                             </div>
                         </div>
+                        <div className="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center">
+                            <Plus size={16} className="text-white" />
+                        </div>
                     </div>
-
-                    <h2 className="text-md font-semibold mb-2">Identity Statistic</h2>
-                    <IdentityCard
-                        title="Active Credentials"
-                        onClick={() => console.log('Active Credentials clicked')}
-                    />
-                    <IdentityCard
-                        title="Access Requests"
-                        onClick={() => console.log('Access Requests clicked')}
-                    />
                 </div>
 
                 {/* Bottom Navigation */}
@@ -130,7 +121,7 @@ export default function SSIWalletIdentity() {
                 </div>
             </div>
 
-            {/* Always on top via Portal */}
+            {/* Scan Action Popup */}
             <ScanActionPortal>
                 <ScanActionPopup
                     visible={showScanPopup}

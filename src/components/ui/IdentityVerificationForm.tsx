@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, Camera, Upload } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 
 interface IdentityVerificationFormProps {
     onBack?: () => void;
@@ -17,7 +17,6 @@ const IdentityVerificationForm: React.FC<IdentityVerificationFormProps> = ({ onB
         placeOfBirth: '',
         dateOfBirth: '',
         nationality: '',
-        documentImage: null as File | null
     });
 
     const handleInputChange = (field: string, value: string) => {
@@ -28,18 +27,36 @@ const IdentityVerificationForm: React.FC<IdentityVerificationFormProps> = ({ onB
         setFormData(prev => ({ ...prev, gender }));
     };
 
-    const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const file = event.target.files?.[0];
-        if (file) {
-            setFormData(prev => ({ ...prev, documentImage: file }));
-        }
-    };
 
     const handleSubmit = () => {
-        // Handle form submission logic here
-        console.log('Form submitted:', formData);
-        // Navigate back to identity page or show success message
-        router.push('/SSIWalletIdentity');
+        // Validate form
+        if (!formData.givenName || !formData.surname || !formData.placeOfBirth ||
+            !formData.dateOfBirth) {
+            alert('Please fill in all required fields');
+            return;
+        }
+
+        try {
+            // Store form data in sessionStorage for use in subsequent pages
+            const storedFormData = sessionStorage.getItem('identity_verification_form');
+            let completeFormData = storedFormData ? JSON.parse(storedFormData) : {};
+            completeFormData = {
+                ...completeFormData,
+                givenName: formData.givenName,
+                surname: formData.surname,
+                gender: formData.gender,
+                placeOfBirth: formData.placeOfBirth,
+                dateOfBirth: formData.dateOfBirth,
+                nationality: formData.nationality
+            };
+            sessionStorage.setItem('identity_verification_form', JSON.stringify(completeFormData));
+
+            // Navigate to nationality selection page
+            router.push('/NationalitySelection');
+        } catch (error) {
+            console.error('Error processing form:', error);
+            alert('There was an error processing your information. Please try again.');
+        }
     };
 
     const handleBack = () => {
@@ -139,57 +156,7 @@ const IdentityVerificationForm: React.FC<IdentityVerificationFormProps> = ({ onB
                     />
                 </div>
 
-                {/* Nationality */}
-                <div className="space-y-2">
-                    <label className="text-sm font-medium text-black">Nationality</label>
-                    <input
-                        type="text"
-                        value={formData.nationality}
-                        onChange={(e) => handleInputChange('nationality', e.target.value)}
-                        className="w-full px-3 py-3 bg-gray-100 border border-gray-300 rounded-lg text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        placeholder="Enter your nationality"
-                    />
-                </div>
 
-                {/* Document Image Upload */}
-                <div className="space-y-2">
-                    <label className="text-sm font-medium text-black">
-                        Please make sure that the picture you look is clear and sharp
-                    </label>
-                    <div className="relative">
-                        <input
-                            type="file"
-                            accept="image/*"
-                            onChange={handleImageUpload}
-                            className="hidden"
-                            id="document-upload"
-                        />
-                        <label
-                            htmlFor="document-upload"
-                            className="w-full h-40 bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:bg-gray-50 transition-colors"
-                        >
-                            {formData.documentImage ? (
-                                <div className="text-center">
-                                    <div className="text-green-600 mb-2">
-                                        <Upload size={24} />
-                                    </div>
-                                    <span className="text-sm text-gray-600">
-                                        {formData.documentImage.name}
-                                    </span>
-                                </div>
-                            ) : (
-                                <div className="text-center">
-                                    <div className="text-gray-400 mb-2">
-                                        <Camera size={32} />
-                                    </div>
-                                    <span className="text-sm text-gray-500">
-                                        Tap to upload document photo
-                                    </span>
-                                </div>
-                            )}
-                        </label>
-                    </div>
-                </div>
 
                 {/* Submit Button */}
                 <div className="pt-4">

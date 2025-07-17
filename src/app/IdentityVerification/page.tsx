@@ -2,11 +2,31 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, Camera, Upload } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
+
+// Define interface for credential offer
+interface CredentialSubject {
+    givenName?: string;
+    surname?: string;
+    gender?: 'male' | 'female';
+    placeOfBirth?: string;
+    dateOfBirth?: string;
+    nationality?: string;
+    [key: string]: unknown;
+}
+
+interface CredentialOffer {
+    type: string;
+    name?: string;
+    issuer?: string;
+    credentialSubject?: CredentialSubject;
+    [key: string]: unknown;
+}
 
 export default function IdentityVerificationPage() {
     const router = useRouter();
     const [mounted, setMounted] = useState(false);
+    const [credentialOffer, setCredentialOffer] = useState<CredentialOffer | null>(null);
     const [formData, setFormData] = useState({
         givenName: '',
         surname: '',
@@ -14,11 +34,36 @@ export default function IdentityVerificationPage() {
         placeOfBirth: '',
         dateOfBirth: '',
         nationality: '',
-        documentImage: null as File | null
     });
 
     useEffect(() => {
         setMounted(true);
+
+        // Retrieve credential offer from sessionStorage
+        const storedCredentialOffer = sessionStorage.getItem('credential_offer');
+        if (storedCredentialOffer) {
+            try {
+                const parsedOffer = JSON.parse(storedCredentialOffer);
+                setCredentialOffer(parsedOffer);
+                console.log('Retrieved credential offer:', parsedOffer);
+
+                // Pre-fill form data if the credential offer contains relevant information
+                if (parsedOffer.credentialSubject) {
+                    const subject = parsedOffer.credentialSubject;
+                    setFormData(prevData => ({
+                        ...prevData,
+                        givenName: subject.givenName || prevData.givenName,
+                        surname: subject.surname || prevData.surname,
+                        gender: subject.gender || prevData.gender,
+                        placeOfBirth: subject.placeOfBirth || prevData.placeOfBirth,
+                        dateOfBirth: subject.dateOfBirth || prevData.dateOfBirth,
+                        nationality: subject.nationality || prevData.nationality
+                    }));
+                }
+            } catch (error) {
+                console.error('Error parsing credential offer:', error);
+            }
+        }
     }, []);
 
     const handleInputChange = (field: string, value: string) => {
@@ -29,26 +74,42 @@ export default function IdentityVerificationPage() {
         setFormData(prev => ({ ...prev, gender }));
     };
 
-    const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const file = event.target.files?.[0];
-        if (file) {
-            setFormData(prev => ({ ...prev, documentImage: file }));
-        }
-    };
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         // Validate form
         if (!formData.givenName || !formData.surname || !formData.placeOfBirth ||
-            !formData.dateOfBirth || !formData.nationality) {
+            !formData.dateOfBirth) {
             alert('Please fill in all required fields');
             return;
         }
 
-        // Handle form submission logic here
-        console.log('Form submitted:', formData);
+        try {
+            // If we have a credential offer, store it in sessionStorage for later use
+            if (credentialOffer) {
+                console.log('Storing credential offer with form data for later acceptance');
+                sessionStorage.setItem('credential_offer_pending', JSON.stringify(credentialOffer));
+            }
 
-        alert('Identity verification submitted successfully!');
-        router.push('/SSIWalletIdentity');
+            // Store form data in sessionStorage for use in subsequent pages
+            const storedFormData = sessionStorage.getItem('identity_verification_form');
+            let completeFormData = storedFormData ? JSON.parse(storedFormData) : {};
+            completeFormData = {
+                ...completeFormData,
+                givenName: formData.givenName,
+                surname: formData.surname,
+                gender: formData.gender,
+                placeOfBirth: formData.placeOfBirth,
+                dateOfBirth: formData.dateOfBirth,
+                nationality: formData.nationality
+            };
+            sessionStorage.setItem('identity_verification_form', JSON.stringify(completeFormData));
+
+            // Navigate to nationality selection page
+            router.push('/NationalitySelection');
+        } catch (error) {
+            console.error('Error processing form:', error);
+            alert('There was an error processing your information. Please try again.');
+        }
     };
 
     const handleBack = () => {
@@ -72,6 +133,32 @@ export default function IdentityVerificationPage() {
                 </button>
                 <h1 className="text-lg font-semibold text-black">Identity Verification</h1>
             </div>
+
+            {/* Credential Offer Information */}
+            {credentialOffer && (
+                <div className="px-4 py-3 bg-blue-50 border-l-4 border-blue-500">
+                    <div className="flex">
+                        <div className="flex-shrink-0">
+                            <svg className="h-5 w-5 text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                            </svg>
+                        </div>
+                        <div className="ml-3">
+                            <h3 className="text-sm font-medium text-blue-800">
+                                Credential Offer Received
+                            </h3>
+                            <div className="mt-2 text-sm text-blue-700">
+                                <p>
+                                    {credentialOffer.name || 'A credential'} is being offered to you by {credentialOffer.issuer || 'an issuer'}.
+                                </p>
+                                <p className="mt-1">
+                                    Please complete the form below to receive your credential.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {/* Form */}
             <div className="px-4 py-6 space-y-6">
@@ -152,57 +239,7 @@ export default function IdentityVerificationPage() {
                     />
                 </div>
 
-                {/* Nationality */}
-                <div className="space-y-2">
-                    <label className="text-sm font-medium text-black">Nationality</label>
-                    <input
-                        type="text"
-                        value={formData.nationality}
-                        onChange={(e) => handleInputChange('nationality', e.target.value)}
-                        className="w-full px-3 py-3 bg-gray-100 border border-gray-300 rounded-lg text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        placeholder="Enter your nationality"
-                    />
-                </div>
 
-                {/* Document Image Upload */}
-                <div className="space-y-2">
-                    <label className="text-sm font-medium text-black">
-                        Please make sure that the picture you look is clear and sharp
-                    </label>
-                    <div className="relative">
-                        <input
-                            type="file"
-                            accept="image/*"
-                            onChange={handleImageUpload}
-                            className="hidden"
-                            id="document-upload"
-                        />
-                        <label
-                            htmlFor="document-upload"
-                            className="w-full h-40 bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:bg-gray-50 transition-colors"
-                        >
-                            {formData.documentImage ? (
-                                <div className="text-center">
-                                    <div className="text-green-600 mb-2">
-                                        <Upload size={24} />
-                                    </div>
-                                    <span className="text-sm text-gray-600">
-                                        {formData.documentImage.name}
-                                    </span>
-                                </div>
-                            ) : (
-                                <div className="text-center">
-                                    <div className="text-gray-400 mb-2">
-                                        <Camera size={32} />
-                                    </div>
-                                    <span className="text-sm text-gray-500">
-                                        Tap to upload document photo
-                                    </span>
-                                </div>
-                            )}
-                        </label>
-                    </div>
-                </div>
 
                 {/* Submit Button */}
                 <div className="pt-4">
@@ -210,7 +247,7 @@ export default function IdentityVerificationPage() {
                         onClick={handleSubmit}
                         className="w-full bg-blue-600 text-white py-4 rounded-full font-medium text-lg hover:bg-blue-700 transition-colors disabled:bg-gray-400"
                         disabled={!formData.givenName || !formData.surname || !formData.placeOfBirth ||
-                            !formData.dateOfBirth || !formData.nationality}
+                            !formData.dateOfBirth}
                     >
                         Next
                     </button>
